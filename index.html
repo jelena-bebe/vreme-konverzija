@@ -1,0 +1,62 @@
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prikaz i Konverzija Vremena</title>
+</head>
+<body>
+
+<h2>Prikaz Vremena</h2>
+
+<!-- Dugme za prikaz lokalnog vremena -->
+<button onclick="prikaziLokalnoVreme()">Prikaži Lokalno Vreme</button>
+<p id="lokalnoVreme"></p>
+
+<!-- Dugme za prikaz vremena u Indiji (IST) -->
+<button onclick="prikaziIndijskoVreme()">Prikaži Indijsko Vreme (IST)</button>
+<p id="indijskoVreme"></p>
+
+<!-- Polje za unos vremena i konverziju -->
+<h3>Konverzija Vremena</h3>
+<label for="inputVreme">Unesi Vreme:</label>
+<input type="time" id="inputVreme">
+<button onclick="konvertujVreme()">Konvertuj Vreme</button>
+<p id="konvertovanoVreme"></p>
+
+<script>
+function prikaziLokalnoVreme() {
+    let trenutnoVreme = new Date();
+    document.getElementById("lokalnoVreme").innerHTML = "Lokalno Vreme: " + trenutnoVreme.toLocaleString();
+}
+
+function prikaziIndijskoVreme() {
+    let trenutnoVreme = new Date();
+    let opcije = { timeZone: 'Asia/Kolkata', timeZoneName: 'short' };
+    let indijskoVreme = trenutnoVreme.toLocaleString('en-IN', opcije);
+    document.getElementById("indijskoVreme").innerHTML = "Indijsko Vreme (IST): " + indijskoVreme;
+}
+
+function konvertujVreme() {
+    let unesenoVreme = document.getElementById("inputVreme").value;
+    if (unesenoVreme) {
+        let trenutnoVreme = new Date();
+        let [sati, minuti] = unesenoVreme.split(":");
+
+        trenutnoVreme.setHours(sati);
+        trenutnoVreme.setMinutes(minuti);
+
+        let opcijeIndijsko = { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: false };
+        let indijskoVreme = new Intl.DateTimeFormat('en-IN', opcijeIndijsko).format(trenutnoVreme);
+
+        let opcijeLokalno = { hour: '2-digit', minute: '2-digit', hour12: false };
+        let lokalnoVreme = trenutnoVreme.toLocaleString('sr-RS', opcijeLokalno);
+
+        document.getElementById("konvertovanoVreme").innerHTML = `Indijsko vreme za uneseno vreme: ${indijskoVreme} | Lokalno vreme: ${lokalnoVreme}`;
+    } else {
+        document.getElementById("konvertovanoVreme").innerHTML = "Molimo unesite validno vreme.";
+    }
+}
+</script>
+
+</body>
+</html>
